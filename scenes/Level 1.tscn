@@ -31,4 +31,3 @@ can_process = true
 
 [node name="Player" parent="." instance=ExtResource( 5 )]
 position = Vector2( 45, 132 )
-speed = 100
