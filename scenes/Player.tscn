@@ -12,9 +12,18 @@ script/source = "extends Sprite
 # Linkar o objeto Animation Player na textura
 export(NodePath) onready var animation_player = get_node(animation_player) as AnimationPlayer
 
+# Linkar o personagem Player c/a Textura
+export(NodePath) onready var player = get_node(player) as KinematicBody2D
+
 func animate(direction:Vector2)->void:
 	verify_position(direction)
-	horizontal_behavior(direction)
+	if direction.y !=0:
+		vertical_behavior(direction)
+	elif player.landing == true:
+		animation_player.play(\"landing\")
+	else:
+		horizontal_behavior(direction)
+	
 
 	
 func verify_position(direction:Vector2):
@@ -30,7 +39,12 @@ func horizontal_behavior(direction:Vector2)->void:
 	else:
 		animation_player.play(\"idle\")
 	
-
+func vertical_behavior(direction:Vector2)-> void:
+	if direction.y > 0:
+		player.landing = true
+		animation_player.play(\"fall\")
+	elif direction.y < 0:
+		animation_player.play(\"jump\")
 "
 
 [sub_resource type="Animation" id=1]
@@ -148,6 +162,7 @@ hframes = 8
 vframes = 11
 script = SubResource( 4 )
 animation_player = NodePath("../Animation")
+player = NodePath("..")
 
 [node name="Animation" type="AnimationPlayer" parent="."]
 anims/RESET = SubResource( 1 )
@@ -158,3 +173,5 @@ anims/landing = SubResource( 7 )
 anims/run = SubResource( 3 )
 
 [node name="Camera" type="Camera2D" parent="."]
+current = true
+limit_top = 0
